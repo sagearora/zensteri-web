@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "zensteri"
+  },
+  "targets": {
+    "zensteri": {
+      "hosting": {
+        "zensteri-web": [
+          "zentasks"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
