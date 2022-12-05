@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { MutableRefObject, RefObject, useRef } from 'react';
+import { ProvideApollo } from './apollo-firebase/with-apollo-firebase';
+import LoadingScreen from './components/LoadingScreen';
+import environment from './environment';
+import { auth } from './firebase';
+import { ProvideDialog } from './lib/dialog.context';
+import AppRouter from './screens/AppRouter';
+import LoginScreen from './screens/Login/LoginScreen';
+import { ProvideClinic } from './services/clinic.context';
+import { ProvideUser } from './services/user.context';
+
 
 function App() {
+  const ref = useRef<HTMLDivElement>(null);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <ProvideDialog>
+      <ProvideApollo
+        is_dev={!environment.production}
+        backend_url={environment.backend_url}
+        backend_ws_url={environment.backend_ws_url}
+        LoadingScreen={<LoadingScreen />}
+        LoginScreen={<LoginScreen />}
+        auth={auth}
+      >
+        <ProvideClinic
+          LoadingScreen={<LoadingScreen title='Loading Clinic' />}>
+          <ProvideUser>
+            <AppRouter />
+          </ProvideUser>
+        </ProvideClinic>
+      </ProvideApollo>
+    </ProvideDialog >
+  )
 }
 
-export default App;
+export default App
